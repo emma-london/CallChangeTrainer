@@ -13,7 +13,7 @@
   --named-color: #b57bee;
   --text: #e8e8f0;
   --text-muted: #8888aa;
-  --bell-size: clamp(44px, 12vw, 64px);
+  --bell-size: clamp(38px, 9vw, 52px);
   font-family: system-ui, -apple-system, sans-serif;
 }
 
@@ -239,7 +239,7 @@ body {
 .bell-pad-buttons {
   display: flex;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
   flex-wrap: wrap;
 }
 
