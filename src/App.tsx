@@ -92,7 +92,7 @@ export default function App() {
               value={configNumBells}
               onChange={(e) => setConfigNumBells(Number(e.target.value))}
             >
-              {[6, 8, 10].map((n) => (
+              {[5, 6, 8, 10].map((n) => (
                 <option key={n} value={n}>{n}</option>
               ))}
             </select>
