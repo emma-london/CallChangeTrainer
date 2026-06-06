@@ -1,4 +1,5 @@
 import type { Row, CallDirection } from '../types';
+import { bellDisplay } from './bellDisplay';
 
 export function makeRounds(numBells: number): Row {
   return Array.from({ length: numBells }, (_, i) => i + 1);
@@ -48,17 +49,20 @@ export function applyCall(
     return { valid: false, error: 'Bell not found in current row.' };
   }
 
+  const X = bellDisplay(bellX);
+
   // ── Lead call ──────────────────────────────────────────────────────────────
   if (bellY === LEAD) {
     if (posX !== 1) {
+      const second = bellDisplay(currentRow[1]);
       return {
         valid: false,
-        error: `Only the second bell in the row can be called to lead. Right now that's ${currentRow[1]}.`,
+        error: `Only the second bell in the row can be called to lead. Right now that's ${second}.`,
       };
     }
     const newRow = [...currentRow];
     [newRow[0], newRow[1]] = [newRow[1], newRow[0]];
-    return { valid: true, call: `${bellX} to Lead`, direction: 'down', newRow };
+    return { valid: true, call: `${X} to Lead`, direction: 'down', newRow };
   }
 
   // ── Normal call ────────────────────────────────────────────────────────────
@@ -72,16 +76,17 @@ export function applyCall(
     return { valid: false, error: 'Tap two different bells.' };
   }
 
+  const Y = bellDisplay(bellY);
   let direction: CallDirection;
   let swapIdx: number;
 
   if (posX < posY) {
     // UP call: X moves later. Y must be immediately after X.
     if (posY !== posX + 1) {
-      const validTarget = currentRow[posX + 1];
+      const validTarget = bellDisplay(currentRow[posX + 1]);
       return {
         valid: false,
-        error: `Up calls must be adjacent. ${bellX} can only follow ${validTarget} right now.`,
+        error: `Up calls must be adjacent. ${X} can only follow ${validTarget} right now.`,
       };
     }
     direction = 'up';
@@ -90,20 +95,20 @@ export function applyCall(
     // DOWN call: X moves earlier. Y must be exactly two positions before X.
     if (posX - posY !== 2) {
       if (posX - posY === 1) {
-        const validTarget = posX - 2 >= 0 ? currentRow[posX - 2] : null;
+        const validTarget = posX - 2 >= 0 ? bellDisplay(currentRow[posX - 2]) : null;
         return {
           valid: false,
           error: validTarget !== null
-            ? `For a down call, ${bellX} must follow a bell two places ahead. Try "${bellX} to ${validTarget}".`
-            : `Use "L" to call ${bellX} to lead.`,
+            ? `For a down call, ${X} must follow a bell two places ahead. Try "${X} to ${validTarget}".`
+            : `Use "L" to call ${X} to lead.`,
         };
       }
-      const validTarget = posX - 2 >= 0 ? currentRow[posX - 2] : null;
+      const validTarget = posX - 2 >= 0 ? bellDisplay(currentRow[posX - 2]) : null;
       return {
         valid: false,
         error: validTarget !== null
-          ? `${bellX} can only follow ${validTarget} in a down call right now.`
-          : `Use "L" to call ${bellX} to lead.`,
+          ? `${X} can only follow ${validTarget} in a down call right now.`
+          : `Use "L" to call ${X} to lead.`,
       };
     }
     direction = 'down';
@@ -115,7 +120,7 @@ export function applyCall(
 
   return {
     valid: true,
-    call: `${bellX} to ${bellY}`,
+    call: `${X} to ${Y}`,
     direction,
     newRow,
   };

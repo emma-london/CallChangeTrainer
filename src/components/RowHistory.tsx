@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import type { HistoryEntry } from '../types';
 import { directionLabel } from '../logic/callChanges';
 import { getNamedChange } from '../logic/namedChanges';
+import { rowDisplay } from '../logic/bellDisplay';
 
 interface Props {
   history: HistoryEntry[];
@@ -23,7 +24,7 @@ export function RowHistory({ history, initialRow }: Props) {
       <div className={`history-entry history-entry--initial${initialName ? ' history-entry--named' : ''}`}>
         <span className="history-call">Start</span>
         <span className="history-right">
-          <span className="history-row">{initialRow.join('')}</span>
+          <span className="history-row">{rowDisplay(initialRow)}</span>
           {initialName && (
             <span className="history-name-badge">{initialName}</span>
           )}
@@ -45,7 +46,7 @@ export function RowHistory({ history, initialRow }: Props) {
               </span>
             </span>
             <span className="history-right">
-              <span className="history-row">{entry.row.join('')}</span>
+              <span className="history-row">{rowDisplay(entry.row)}</span>
               {name && <span className="history-name-badge">{name}</span>}
             </span>
           </div>

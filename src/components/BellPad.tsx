@@ -1,4 +1,5 @@
 import { LEAD } from '../logic/callChanges';
+import { bellDisplay } from '../logic/bellDisplay';
 
 interface Props {
   numBells: number;
@@ -12,7 +13,7 @@ export function BellPad({ numBells, selectedBell, onBellTap }: Props) {
       <div className="bell-pad-hint">
         {selectedBell === null
           ? 'Tap the bell to call'
-          : `"${selectedBell} to …" — tap the destination`}
+          : `"${bellDisplay(selectedBell)} to …" — tap the destination`}
       </div>
       <div className="bell-pad-buttons">
         {/* Lead button — destination only, so disabled until a bell is selected */}
@@ -31,7 +32,7 @@ export function BellPad({ numBells, selectedBell, onBellTap }: Props) {
             className={`bell-button${selectedBell === bell ? ' bell-button--selected' : ''}`}
             onClick={() => onBellTap(bell)}
           >
-            {bell}
+            {bellDisplay(bell)}
           </button>
         ))}
       </div>

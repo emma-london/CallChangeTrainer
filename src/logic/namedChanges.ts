@@ -1,4 +1,5 @@
 import type { Row } from '../types';
+import { rowDisplay } from './bellDisplay';
 
 /**
  * Named changes keyed by row string (bells joined, no spaces).
@@ -58,5 +59,5 @@ const NAMED_CHANGES: Record<number, Record<string, string>> = {
 export function getNamedChange(row: Row): string | null {
   const lookup = NAMED_CHANGES[row.length];
   if (!lookup) return null;
-  return lookup[row.join('')] ?? null;
+  return lookup[rowDisplay(row)] ?? null;
 }

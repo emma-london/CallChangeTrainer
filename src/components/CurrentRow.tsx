@@ -1,4 +1,5 @@
 import type { Row } from '../types';
+import { bellDisplay } from '../logic/bellDisplay';
 
 interface Props {
   row: Row;
@@ -11,7 +12,7 @@ export function CurrentRow({ row }: Props) {
       <div className="current-row-bells">
         {row.map((bell, i) => (
           <span key={i} className="current-bell">
-            {bell}
+            {bellDisplay(bell)}
           </span>
         ))}
       </div>
