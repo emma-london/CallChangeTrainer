@@ -22,8 +22,10 @@ function makeInitialState(numBells: number): AppState {
 export default function App() {
   const [state, setState] = useState<AppState>(() => makeInitialState(DEFAULT_BELLS));
   const [feedback, setFeedback] = useState<{ message: string; isError: boolean } | null>(null);
-  const [initialRow] = useState(() => makeRounds(DEFAULT_BELLS));
   const [configNumBells, setConfigNumBells] = useState(DEFAULT_BELLS);
+
+  // Always derived — no stale frozen copy
+  const initialRow = makeRounds(state.numBells);
 
   const handleBellTap = useCallback((bell: number) => {
     setState((prev) => {
@@ -90,7 +92,12 @@ export default function App() {
             Bells:
             <select
               value={configNumBells}
-              onChange={(e) => setConfigNumBells(Number(e.target.value))}
+              onChange={(e) => {
+                const n = Number(e.target.value);
+                setConfigNumBells(n);
+                setState(makeInitialState(n));
+                setFeedback(null);
+              }}
             >
               {[5, 6, 8, 10].map((n) => (
                 <option key={n} value={n}>{n}</option>
