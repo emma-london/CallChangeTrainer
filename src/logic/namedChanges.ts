@@ -53,6 +53,10 @@ const NAMED_CHANGES: Record<number, Record<string, string>> = {
     '75321468': 'Princes',
     '76543218': 'Back Rounds / Roll-up',
   },
+  10: {
+  	'1234567890': 'Rounds'
+	'1357924680': 'Queens'
+  }
 };
 
 /** Returns the name of a change, or null if it has no name. */
