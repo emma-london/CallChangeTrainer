@@ -244,3 +244,23 @@ body {
   color: #fff;
   transform: scale(1.08);
 }
+
+.bell-button--lead {
+  border-style: dashed;
+  border-color: var(--down-color);
+  color: var(--down-color);
+  background: transparent;
+  font-size: clamp(0.9rem, 4vw, 1.3rem);
+}
+
+.bell-button--lead:hover:not(:disabled) {
+  background: var(--down-color);
+  border-color: var(--down-color);
+  border-style: solid;
+  color: var(--bg);
+}
+
+.bell-button--disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
