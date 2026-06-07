@@ -83,7 +83,9 @@ body {
   font-size: 0.85rem;
   cursor: pointer;
 }
-.reset-button:hover { background: var(--accent); border-color: var(--accent); }
+@media (hover: hover) {
+  .reset-button:hover { background: var(--accent); border-color: var(--accent); }
+}
 
 /* ── Current row ── */
 .current-row {
@@ -257,10 +259,12 @@ body {
   touch-action: manipulation;
 }
 
-.bell-button:hover {
-  background: var(--accent2);
-  border-color: var(--accent2);
-  color: var(--bg);
+@media (hover: hover) {
+  .bell-button:hover {
+    background: var(--accent2);
+    border-color: var(--accent2);
+    color: var(--bg);
+  }
 }
 
 .bell-button--selected {
@@ -278,11 +282,13 @@ body {
   font-size: clamp(0.9rem, 4vw, 1.3rem);
 }
 
-.bell-button--lead:hover:not(:disabled) {
-  background: var(--down-color);
-  border-color: var(--down-color);
-  border-style: solid;
-  color: var(--bg);
+@media (hover: hover) {
+  .bell-button--lead:hover:not(:disabled) {
+    background: var(--down-color);
+    border-color: var(--down-color);
+    border-style: solid;
+    color: var(--bg);
+  }
 }
 
 .bell-button--disabled {
