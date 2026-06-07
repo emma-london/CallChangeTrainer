@@ -7,9 +7,10 @@ import { rowDisplay } from '../logic/bellDisplay';
 interface Props {
   history: HistoryEntry[];
   initialRow: number[];
+  sequenceActive: boolean;
 }
 
-export function RowHistory({ history, initialRow }: Props) {
+export function RowHistory({ history, initialRow, sequenceActive }: Props) {
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -36,7 +37,11 @@ export function RowHistory({ history, initialRow }: Props) {
         return (
           <div
             key={i}
-            className={`history-entry${entry.isMixed ? ' history-entry--mixed' : ''}${name ? ' history-entry--named' : ''}`}
+            className={[
+              'history-entry',
+              entry.isMixed ? 'history-entry--mixed' : '',
+              name ? 'history-entry--named' : '',
+            ].filter(Boolean).join(' ')}
           >
             <span className="history-call">
               {entry.call}
@@ -46,7 +51,14 @@ export function RowHistory({ history, initialRow }: Props) {
               </span>
             </span>
             <span className="history-right">
-              <span className="history-row">{rowDisplay(entry.row)}</span>
+              <span className="history-row-line">
+                {sequenceActive && entry.sequenceMatch !== undefined && (
+                  <span className={`sequence-indicator sequence-indicator--${entry.sequenceMatch ? 'ok' : 'wrong'}`}>
+                    {entry.sequenceMatch ? '✓' : '✗'}
+                  </span>
+                )}
+                <span className="history-row">{rowDisplay(entry.row)}</span>
+              </span>
               {name && <span className="history-name-badge">{name}</span>}
             </span>
           </div>

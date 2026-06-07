@@ -54,7 +54,8 @@ body {
 .app-controls {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .app-controls label {
@@ -198,6 +199,22 @@ body {
 
 .history-direction--up { color: var(--up-color); }
 .history-direction--down { color: var(--down-color); }
+
+.history-row-line {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.sequence-indicator {
+  font-size: 0.9rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.sequence-indicator--ok   { color: var(--up-color); }
+.sequence-indicator--wrong { color: var(--mixed-color); }
 
 .mixed-warning {
   color: var(--mixed-color);

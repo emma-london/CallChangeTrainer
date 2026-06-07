@@ -6,6 +6,8 @@ export interface HistoryEntry {
   call: string;          // e.g. "3 to 4"
   direction: CallDirection;
   isMixed: boolean;      // true if this call breaks the established direction
+  sequenceMatch?: boolean; // undefined = no sequence active; true/false = on/off track
+  sequenceIndexAfter?: number; // sequence cursor after this move
 }
 
 export interface AppState {
