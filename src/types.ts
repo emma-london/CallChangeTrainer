@@ -16,4 +16,5 @@ export interface AppState {
   history: HistoryEntry[];
   establishedDirection: CallDirection | null;
   selectedBell: number | null;  // first bell tapped, awaiting second
+  sequenceIndex: number;        // current position in the active sequence
 }

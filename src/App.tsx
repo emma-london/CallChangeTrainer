@@ -19,6 +19,7 @@ function makeInitialState(numBells: number): AppState {
     history: [],
     establishedDirection: null,
     selectedBell: null,
+    sequenceIndex: 0,
   };
 }
 
@@ -27,13 +28,12 @@ export default function App() {
   const [feedback, setFeedback] = useState<{ message: string; isError: boolean } | null>(null);
   const [configNumBells, setConfigNumBells] = useState(DEFAULT_BELLS);
   const [activeSequence, setActiveSequence] = useState<Sequence | null>(null);
-  const [sequenceIndex, setSequenceIndex] = useState(0);
 
   const initialRow = makeRounds(state.numBells);
 
+  // sequenceIndex lives in AppState so the setState functional updater always
+  // reads the up-to-date value via `prev` — no stale closure risk.
   const handleBellTap = useCallback((bell: number) => {
-    // Note: activeSequence and sequenceIndex are captured from the closure.
-    // This is intentional — they are stable references for this render.
     setState((prev) => {
       if (prev.selectedBell === null) {
         setFeedback(null);
@@ -41,7 +41,6 @@ export default function App() {
       }
 
       if (prev.selectedBell === bell) {
-        // Cancel selection
         setFeedback(null);
         return { ...prev, selectedBell: null };
       }
@@ -65,14 +64,16 @@ export default function App() {
         setFeedback({ message: `✓ ${result.call} (${result.direction})`, isError: false });
       }
 
-      // Sequence tracking
+      // Sequence tracking — read sequenceIndex from prev (never stale).
+      // Each step holds one or more allowed rows; a call is correct if the
+      // new row matches any of them.
       let seqMatch: boolean | undefined = undefined;
-      let nextSeqIdx: number | undefined = undefined;
-      if (activeSequence && sequenceIndex < activeSequence.rows.length - 1) {
-        const expected = activeSequence.rows[sequenceIndex + 1];
-        seqMatch = rowDisplay(result.newRow) === rowDisplay(expected);
-        nextSeqIdx = seqMatch ? sequenceIndex + 1 : sequenceIndex;
-        setSequenceIndex(nextSeqIdx);
+      let nextSeqIdx = prev.sequenceIndex;
+      if (activeSequence && prev.sequenceIndex < activeSequence.rows.length - 1) {
+        const newRowStr = rowDisplay(result.newRow);
+        const allowedRows = activeSequence.rows[prev.sequenceIndex + 1];
+        seqMatch = allowedRows.some(r => rowDisplay(r) === newRowStr);
+        nextSeqIdx = seqMatch ? prev.sequenceIndex + 1 : prev.sequenceIndex;
       }
 
       const entry: HistoryEntry = {
@@ -90,14 +91,14 @@ export default function App() {
         history: [...prev.history, entry],
         establishedDirection: prev.establishedDirection ?? result.direction,
         selectedBell: null,
+        sequenceIndex: nextSeqIdx,
       };
     });
-  }, [activeSequence, sequenceIndex]);
+  }, [activeSequence]); // sequenceIndex no longer needed in deps
 
   const handleReset = () => {
     setState(makeInitialState(configNumBells));
     setFeedback(null);
-    setSequenceIndex(0);
   };
 
   const handleUndo = () => {
@@ -113,13 +114,13 @@ export default function App() {
         newHistory.length > 0
           ? (newHistory[newHistory.length - 1].sequenceIndexAfter ?? 0)
           : 0;
-      setSequenceIndex(restoredSeqIdx);
       return {
         ...prev,
         currentRow: prevRow,
         history: newHistory,
         establishedDirection: prevDirection,
         selectedBell: null,
+        sequenceIndex: restoredSeqIdx,
       };
     });
     setFeedback(null);
@@ -128,14 +129,12 @@ export default function App() {
   const handleSequenceChange = (name: string) => {
     if (name === '') {
       setActiveSequence(null);
-      setSequenceIndex(0);
       setState(makeInitialState(configNumBells));
       setFeedback(null);
       return;
     }
     const seq = SEQUENCES.find((s) => s.name === name) ?? null;
     setActiveSequence(seq);
-    setSequenceIndex(0);
     if (seq && seq.numBells !== configNumBells) {
       setConfigNumBells(seq.numBells);
       setState(makeInitialState(seq.numBells));
@@ -160,7 +159,6 @@ export default function App() {
                 setState(makeInitialState(n));
                 setFeedback(null);
                 setActiveSequence(null);
-                setSequenceIndex(0);
               }}
             >
               {[5, 6, 8, 10].map((n) => (
