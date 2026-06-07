@@ -54,8 +54,8 @@ const NAMED_CHANGES: Record<number, Record<string, string>> = {
     '76543218': 'Back Rounds / Roll-up',
   },
   10: {
-  	'1234567890': 'Rounds'
-	'1357924680': 'Queens'
+  	'1234567890': 'Rounds',
+	'1357924680': 'Queens',
   },
 };
 
