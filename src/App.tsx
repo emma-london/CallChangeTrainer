@@ -83,6 +83,26 @@ export default function App() {
     setFeedback(null);
   };
 
+  const handleUndo = () => {
+    setState((prev) => {
+      if (prev.history.length === 0) return prev;
+      const newHistory = prev.history.slice(0, -1);
+      const prevRow =
+        newHistory.length > 0
+          ? newHistory[newHistory.length - 1].row
+          : makeRounds(prev.numBells);
+      const prevDirection = newHistory.length > 0 ? newHistory[0].direction : null;
+      return {
+        ...prev,
+        currentRow: prevRow,
+        history: newHistory,
+        establishedDirection: prevDirection,
+        selectedBell: null,
+      };
+    });
+    setFeedback(null);
+  };
+
   return (
     <div className="app">
       <header className="app-header">
@@ -104,8 +124,15 @@ export default function App() {
               ))}
             </select>
           </label>
+          <button
+            className="reset-button"
+            onClick={handleUndo}
+            disabled={state.history.length === 0}
+          >
+            Undo
+          </button>
           <button className="reset-button" onClick={handleReset}>
-            Reset to rounds
+            Reset
           </button>
         </div>
       </header>
