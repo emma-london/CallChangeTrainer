@@ -34,8 +34,8 @@ const SIXTY_ON_THIRDS: Sequence = {
     [[3,5,2,1,4,6]],                         //  6
     [[3,5,2,4,1,6]],                         //  7
     [[5,3,2,4,1,6]],                         //  8
-    [[5,3,2,1,4,6]],                         //  9
-    [[5,3,1,2,4,6]],                         // 10
+    [[5,3,2,1,4,6]],                         //  9; Princes
+    [[5,3,1,2,4,6]],                         // 10; Kings
     [[5,1,3,2,4,6]],                         // 11
     [[1,5,3,2,4,6]],                         // 12
     [[1,5,2,3,4,6]],                         // 13
@@ -95,4 +95,42 @@ const SIXTY_ON_THIRDS: Sequence = {
   ],
 };
 
-export const SEQUENCES: Sequence[] = [SIXTY_ON_THIRDS];
+/**
+ * "Queens" for 6 bells.
+ *
+ * Step 1 allows two paths from Rounds:
+ *   Way 1: 123456 → 132456 → 132546 → Queens
+ *   Way 2: 123456 → 123546 → 132546 → Queens
+ */
+const QUEENS: Sequence = {
+  name: 'To Queens',
+  numBells: 6,
+  rows: [
+    [[1,2,3,4,5,6]],                        //  0: Rounds (start)
+    [[1,3,2,4,5,6], [1,2,3,5,4,6]],         //  1: 132456 or 123546 (two valid paths)
+    [[1,3,2,5,4,6]],                         //  2: both paths converge here
+    [[1,3,5,2,4,6]],                         //  3: Queens
+  ],
+};
+
+/**
+ * "Kings" for 6 bells.
+ *
+ */
+const KINGS: Sequence = {
+  name: 'To Kings',
+  numBells: 6,
+  rows: [
+    [[1,2,3,4,5,6]],                        //  0: Rounds (start)
+    [[1,2,3,5,4,6], [1,3,2,4,5,6], [2,1,3,4,5,6]],
+    [[1,2,5,3,4,6], [1,3,2,5,4,6], [2,3,1,4,5,6]],
+    [[1,5,2,3,4,6], [1,3,5,2,4,6], [2,3,1,5,4,6]],
+    [[5,1,2,3,4,6], [1,5,3,2,4,6], [2,3,5,1,4,6]],
+    [[5,1,3,2,4,6], [2,5,3,1,4,6]],                
+    [[5,3,1,2,4,6], [5,2,3,1,4,6]],     //  6: Kings
+    [[5,3,2,1,4,6]],                    //  7: Princes
+    [[5,3,1,2,4,6]],                    //  8: Kings, final change
+  ],
+};
+
+export const SEQUENCES: Sequence[] = [SIXTY_ON_THIRDS, QUEENS, KINGS];
