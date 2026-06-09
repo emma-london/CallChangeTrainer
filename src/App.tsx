@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import type { AppState, HistoryEntry } from './types';
 import type { Sequence } from './logic/sequences';
 import { makeRounds, applyCall } from './logic/callChanges';
@@ -11,6 +11,28 @@ import { rowDisplay } from './logic/bellDisplay';
 import './App.css';
 
 const DEFAULT_BELLS = 6;
+const STORAGE_KEY = 'callChangeApp_v1';
+
+interface PersistedSession {
+  appState: AppState;
+  configNumBells: number;
+  activeSequenceName: string | null;
+}
+
+function loadSession(): PersistedSession | null {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    const parsed: PersistedSession = JSON.parse(raw);
+    // Basic sanity check before trusting stored data
+    if (!Array.isArray(parsed.appState?.currentRow) || !Array.isArray(parsed.appState?.history)) {
+      return null;
+    }
+    return parsed;
+  } catch {
+    return null;
+  }
+}
 
 function makeInitialState(numBells: number): AppState {
   return {
@@ -24,10 +46,33 @@ function makeInitialState(numBells: number): AppState {
 }
 
 export default function App() {
-  const [state, setState] = useState<AppState>(() => makeInitialState(DEFAULT_BELLS));
+  const [state, setState] = useState<AppState>(() => {
+    const saved = loadSession();
+    if (saved) return { ...saved.appState, selectedBell: null };
+    return makeInitialState(DEFAULT_BELLS);
+  });
   const [feedback, setFeedback] = useState<{ message: string; isError: boolean } | null>(null);
-  const [configNumBells, setConfigNumBells] = useState(DEFAULT_BELLS);
-  const [activeSequence, setActiveSequence] = useState<Sequence | null>(null);
+  const [configNumBells, setConfigNumBells] = useState(() => {
+    return loadSession()?.configNumBells ?? DEFAULT_BELLS;
+  });
+  const [activeSequence, setActiveSequence] = useState<Sequence | null>(() => {
+    const name = loadSession()?.activeSequenceName;
+    return name ? (SEQUENCES.find((s) => s.name === name) ?? null) : null;
+  });
+
+  // Persist state to localStorage whenever it changes
+  useEffect(() => {
+    const session: PersistedSession = {
+      appState: { ...state, selectedBell: null },
+      configNumBells,
+      activeSequenceName: activeSequence?.name ?? null,
+    };
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
+    } catch {
+      // Storage unavailable or full — silently ignore
+    }
+  }, [state, configNumBells, activeSequence]);
 
   const initialRow = makeRounds(state.numBells);
 
