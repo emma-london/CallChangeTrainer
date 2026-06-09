@@ -133,4 +133,32 @@ const KINGS: Sequence = {
   ],
 };
 
-export const SEQUENCES: Sequence[] = [SIXTY_ON_THIRDS, QUEENS, KINGS];
+/**
+ * "Tittums" for 6 bells.
+ *
+ */
+const TITTUMS: Sequence = {
+  name: 'To Tittums',
+  numBells: 6,
+  rows: [
+    [[1,2,3,4,5,6]],
+    [[1,2,4,3,5,6]],
+    [[1,4,2,3,5,6], [1,2,4,5,3,6]],
+    [[1,4,2,5,3,6]],                 //  3: Tittums
+  ],
+};
+
+/**
+ * "Weasels" for 5 bells.
+ *
+ */
+const WEASELS: Sequence = {
+  name: 'To Weasels',
+  numBells: 5,
+  rows: [
+    [[1,2,3,4,5]],
+    [[1,2,4,3,5]],  
+    [[1,4,2,3,5]],                 //  2: Weasels
+  ],
+};
+export const SEQUENCES: Sequence[] = [SIXTY_ON_THIRDS, QUEENS, KINGS, TITTUMS, WEASELS];
