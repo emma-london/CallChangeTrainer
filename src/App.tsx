@@ -173,7 +173,7 @@ export default function App() {
               onChange={(e) => handleSequenceChange(e.target.value)}
             >
               <option value=''>None</option>
-              {SEQUENCES.map((s) => (
+              {SEQUENCES.filter((s) => s.numBells === configNumBells).map((s) => (
                 <option key={s.name} value={s.name}>{s.name}</option>
               ))}
             </select>
