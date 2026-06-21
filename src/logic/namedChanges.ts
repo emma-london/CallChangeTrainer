@@ -55,7 +55,11 @@ const NAMED_CHANGES: Record<number, Record<string, string>> = {
   },
   10: {
   	'1234567890': 'Rounds',
-	'1357924680': 'Queens',
+	  '1357924680': 'Queens',
+	  '1627384950': 'Tittums',
+	  '9753124680': 'Kings',
+	  '1357946820': 'Princesses',
+    
   },
 };
 
